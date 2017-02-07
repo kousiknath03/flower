@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+  {% module Template("navbar.html", active_tab="workers") %}
+{% end %}
+
+{% block container %}
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+
+      <div class="control-group">
+        <h3 class="control-label" for="min-autoscale">Apply Filter</h3>
+        <div class="controls">
+          <div class="input-append">
+            <input class="input-max" id="provider-name" size="20" type="text" placeholder="Enter Provider Name" required = true/>
+            <input class="input-max" id="task-name" size="20" type="text" placeholder="Enter Task Name" required = true/>
+            <input class="form-control" type="date" id="task-date" required = true/>
+
+            <select class="input-mini" id="selected-hour">
+              {% for counter in range(0, 24) %}
+                <option> {{ counter }} </option>
+              {% end %}              
+            </select>
+
+            <button class="btn" type="button" onclick="flower.on_trace(event, 0)">Apply</button>
+          </div>
+          </div>
+      </div>
+
+        <div class="tabbable">
+          <ul class="nav nav-tabs">
+            <!-- <li><a href="#tab-broker" data-toggle="tab">Broker</a></li> -->
+            <li class="active"><a href="#tab-tasks" data-toggle="tab">Tasks</a></li>
+            <li><a href="#tab-graph" data-toggle="tab">Graph</a></li>
+            <!-- <li><a href="#tab-tasks" data-toggle="tab">Tasks</a></li>
+            <li><a href="#tab-limits" data-toggle="tab">Limits</a></li>
+            <li><a href="#tab-config" data-toggle="tab">Config</a></li>
+            <li><a href="#tab-system" data-toggle="tab">System</a></li> -->
+          </ul>
+
+          <div class="tab-content">
+
+            <div class="tab-pane active" id="tab-tasks">
+
+              <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>UUID</th>
+                  <th>State</th>
+                  <th>Result</th>
+                  <th>Processed At</th>
+                  <th>Worker</th>
+                  <th>Queue</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in ftasks %}
+                  <tr>
+                    <td>{{ item['task_name'] }} </td>
+                    <td>
+                      <a href = {{ '/traced_task/' + str(item['UUID']) }} >{{ item['UUID'] }} </a>
+                    </td>
+                    <td>
+                      {% if item['task_status'] == "SUCCESS" %}
+                      <span class="label label-success">{{ item['task_status'] }}</span>
+                      {% elif item['task_status'] == "FAILURE" %}
+                      <span class="label label-important">{{ item['task_status'] }}</span>
+                      {% else %}
+                      <span class="label label-default">{{ item['task_status'] }}</span>
+                      {% end %}
+                    </td>
+                    <td> {{ item['result']  }} </td>
+                    <td> {{ item['processed_at'] }} </td>
+                    <td> {{ item['worker_host']  }} </td>
+                    <td> {{ item['queue'] }} </td>
+                  </tr>
+                {% end %}
+
+              </tbody>
+              </table>
+
+              {% if cursor is not None %}
+              <button class="btn pull-right" type="button" onclick="flower.on_trace(event, '{{provider_name}}', '{{task_name}}', '{{task_date}}', '{{task_hour}}', {{cursor}})">Next</button>
+              {% end %}
+
+              <br/>
+            </div> <!-- end queues tab -->
+
+            <div class="tab-pane" id="tab-graph">
+
+              <div class="row-fluid">
+
+                <div class="span6">
+                  <div class="form-horizontal">
+                    <fieldset>
+                      <legend>Pool size control</legend>
+                      <div class="control-group">
+                        <label class="control-label" for="pool-size">Pool size</label>
+                        <div class="controls">
+                          <div class="input-append">
+                            <select class="input-mini" id="pool-size">
+                              <option>1</option>
+                              <option>2</option>
+                              <option>3</option>
+                              <option>4</option>
+                              <option>5</option>
+                            </select>
+                            <button class="btn" type="button" onclick="flower.on_pool_grow(event)">Grow</button>
+                            <button class="btn" type="button" onclick="flower.on_pool_shrink(event)">Shrink</button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="control-group">
+                        <label class="control-label" for="min-autoscale">Min/Max autoscale</label>
+                        <div class="controls">
+                          <div class="input-append">
+                            <input class="input-mini" id="min-autoscale" size="6" type="text">
+                            <input class="input-mini" id="max-autoscale" size="6" type="text">
+                            <button class="btn" type="button" onclick="flower.on_pool_autoscale(event)">Apply</button>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+
+            </div> <!-- end pool tab -->
+         </div>
+        </div>
+      </div>
+  </div>
+  </div>
+{% end %}

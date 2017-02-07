@@ -144,6 +144,67 @@ var flower = (function () {
         });
     }
 
+    function on_trace(event, param_provider_name=null, param_task_name=null, param_task_date=null, param_task_hour=null, cursor=0) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        var providername = param_provider_name;
+        if(providername == null || providername == "" || providername.length == 0)
+        {
+            providername = $("#provider-name").val();
+        }
+
+        var taskname = param_task_name;
+        if(taskname == null || taskname == "" || taskname.length == 0)
+        {
+            taskname = $("#task-name").val();
+        }
+
+        var taskdate = param_task_date;
+        if(taskdate == null || taskdate == "" || taskdate.length == 0)
+        {
+            taskdate = $("#task-date").val(); // need to format the date
+        }
+
+        var hour = param_task_hour;
+        if(hour == null || hour == "" || hour.length == 0)
+        {
+            hour = $('#selected-hour option:selected').html();
+        }
+
+        var cursor_pos = cursor
+
+        if(providername == null || providername == "" || providername.length == 0 || taskname == null || taskname == "" || taskname.length == 0
+            || taskdate == null || taskdate == "" || taskdate.length == 0 || hour == null || hour == "" || hour.length == 0)
+        {
+            window.alert("Either provider name / task name / date or hour is null");
+        }
+        else
+        {
+            var temp_url = url_prefix() + '/api/trace/tasks?p_name=' + providername + '&t_name=' + taskname + '&t_date=' + taskdate + '&cursor=' + cursor_pos + '&hour=' + hour;
+            window.location = temp_url;
+        }
+
+        /*$.ajax({
+            type: 'GET',
+            url: "",
+            //dataType: 'json',
+            data: {
+                'providername' : providername,
+                'taskname' : taskname,
+                'taskdate' : taskdate
+            },
+            success: function (data) {
+                //show_success_alert('Refreshed');
+                //window.alert('Success')
+
+            },
+            error: function (data) {
+                show_error_alert(data.responseText);
+            }
+        });*/
+    }
+
     function on_pool_grow(event) {
         event.preventDefault();
         event.stopPropagation();
@@ -899,6 +960,7 @@ var flower = (function () {
         on_cancel_task_filter: on_cancel_task_filter,
         on_task_revoke: on_task_revoke,
         on_task_terminate: on_task_terminate,
+        on_trace:on_trace,
     };
 
 }(jQuery));

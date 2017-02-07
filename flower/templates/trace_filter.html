@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+  {% module Template("navbar.html", active_tab="workers") %}
+{% end %}
+
+{% block container %}
+  <div class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="page-header">
+                <h1 id="workername">Log Trace Filter Options</h1>
+        </div>
+
+        <button class="btn pull-right" type="button" onclick="flower.on_worker_refresh(event)">Refresh</button>
+        <div class="tabbable">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-trace-filter" data-toggle="tab">Filter</a></li>
+<!--             <li><a href="#tab-broker" data-toggle="tab">Broker</a></li>
+            <li><a href="#tab-queues" data-toggle="tab">Queues</a></li>
+            <li><a href="#tab-tasks" data-toggle="tab">Tasks</a></li>
+            <li><a href="#tab-limits" data-toggle="tab">Limits</a></li>
+            <li><a href="#tab-config" data-toggle="tab">Config</a></li>
+            <li><a href="#tab-system" data-toggle="tab">System</a></li> -->
+          </ul>
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-trace-filter">
+
+                <div class="span6">
+                  <div class="form-horizontal">
+                    <fieldset>
+                      <legend>Choose Filters</legend>
+                      <div class="control-group">
+                        <label class="control-label" for="provider-name">Provider Name</label>
+                        <div class="controls">
+                          <div class="input-append">
+                            <input class="input-max" id="provider-name" size="100" type="text">
+                            <!-- <button class="btn" type="button" onclick="flower.on_pool_autoscale(event)">Apply</button> -->
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="control-group">
+                        <label class="control-label" for="task-name">Task Name</label>
+                        <div class="controls">
+                          <div class="input-append">
+                            <input class="input-max" id="task-name" size="100" type="text">
+                            <!-- <button class="btn" type="button" onclick="flower.on_pool_autoscale(event)">Apply</button> -->
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="control-group">
+                        <label class="control-label" for="task-date">Task Date</label>
+                        <div class="controls">
+                          <div class="input-append">
+                            <input class="form-control" type="date" id="task-date">
+                            <!-- <button class="btn" type="button" onclick="flower.on_pool_autoscale(event)">Apply</button> -->
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="control-group">
+                        <div class="controls">
+                          <div class="input-append">
+                            <button class="btn pull-left" type="button" onclick="flower.on_trace(event)">Submit</button>
+                          </div>
+                        </div>
+                      </div>
+
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+
+            </div> <!-- end pool tab -->
+
+         </div>
+        </div>
+      </div>
+  </div>
+  </div>
+{% end %}

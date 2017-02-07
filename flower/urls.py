@@ -16,6 +16,7 @@ from .views.tasks import TaskView, TasksView, TasksDataTable
 from .views.error import NotFoundErrorHandler
 from .views.dashboard import DashboardView, DashboardUpdateHandler
 from .utils import gen_cookie_secret
+from .views.trace import TraceView, FilteredTasksView, TracedTasksView
 
 
 settings = dict(
@@ -36,6 +37,7 @@ handlers = [
     url(r"/tasks", TasksView, name='tasks'),
     url(r"/tasks/datatable", TasksDataTable),
     url(r"/broker", BrokerView, name='broker'),
+    url(r"/trace", TraceView, name='trace'),
     # Worker API
     (r"/api/workers", workers.ListWorkers),
     (r"/api/worker/shutdown/(.+)", control.WorkerShutDown),
@@ -46,6 +48,7 @@ handlers = [
     (r"/api/worker/queue/add-consumer/(.+)", control.WorkerQueueAddConsumer),
     (r"/api/worker/queue/cancel-consumer/(.+)",
         control.WorkerQueueCancelConsumer),
+    (r"/api/trace/tasks", FilteredTasksView), # need to change it for tracing tasks.
     # Task API
     (r"/api/tasks", tasks.ListTasks),
     (r"/api/task/types", tasks.ListTaskTypes),
@@ -82,6 +85,7 @@ handlers = [
     # Auth
     (r"/login", auth.LoginHandler),
     url(r"/logout", auth.LogoutHandler, name='logout'),
+    (r"/traced_task/(.+)", TracedTasksView),
 
     # Error
     (r".*", NotFoundErrorHandler),

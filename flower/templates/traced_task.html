@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block navbar %}
+  {% module Template("navbar.html", active_tab="tasks") %}
+{% end %}
+
+{% block container %}
+  <div id='task-page' class="container-fluid">
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="page-header">
+          <p id="taskid" class="hidden">{{ task.uuid }}</p>
+          <h2>{{ getattr(task, 'task_name', None) }}
+            <small>{{ task.uuid }}</small>
+            {% if task.state == "STARTED" %}
+                <button style="float: right" class="btn btn-danger" onclick="flower.on_task_terminate(event)">Terminate</button>
+            {% elif task.state == "RECEIVED" or task.state == "RETRY" %}
+                <button  style="float: right" class="btn btn-danger" onclick="flower.on_task_revoke(event)">Revoke</button>
+            {% end %}
+          </h2>
+        </div>
+        <div class="row-fluid">
+          <div class="span6">
+            <table class="table table-bordered table-striped">
+              <caption>Basic task details</caption>
+              <tbody>
+              <tr>
+                <td>Name</td>
+                <td>{{ getattr(task, 'task_name', None) }}</td>
+              </tr>
+              <tr>
+                <td>UUID</td>
+                <td>{{ task.uuid }}</td>
+              </tr>
+              <tr>
+                <td>State</td>
+                <td>
+                  {% if task.state == "SUCCESS" %}
+                  <span class="label label-success">{{ task.state }}</span>
+                  {% elif task.state == "FAILURE" %}
+                  <span class="label label-important">{{ task.state }}</span>
+                  {% else %}
+                  <span class="label label-default">{{ task.state }}</span>
+                  {% end %}
+                </td>
+              </tr>
+              <tr>
+                <td>args</td>
+                <td>{{ task.args }}</td>
+              </tr>
+              <tr>
+                <td>kwargs</td>
+                <td>{{ task.kwargs }}</td>
+              </tr>
+              <tr>
+                <td>Result</td>
+                <td>{{ getattr(task, 'result', '') }}</td>
+              </tr>
+              <tr>
+                <td>Worker</td>
+                <td>{{ getattr(task, 'worker', None) }}</td>
+              </tr>
+              <tr>
+                <td>Queue</td>
+                <td>{{ getattr(task, 'queue', None) }}</td>
+              </tr>
+              <tr>
+                <td>Origin</td>
+                <td>{{ getattr(task, 'origin', None) }}</td>
+              </tr>
+              <tr>
+                <td>Exception Type</td>
+                <td>{{ getattr(task, 'exception_type', '') }}</td>
+              </tr>
+              <tr>
+                <td>Exception Message</td>
+                <td>{{ getattr(task, 'exception_message', '') }}</td>
+              </tr>
+              <tr>
+                <td>Traceback</td>
+                <td><pre>{{ getattr(task, 'traceback', '') }}</pre></td>
+              </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <div class="span6">
+            <table class="table table-bordered table-striped">
+              <caption>Pulled Entity Details</caption>
+              <tbody>
+                <tr>
+                  <td>
+                    <pre>Test</pre>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% end %}
